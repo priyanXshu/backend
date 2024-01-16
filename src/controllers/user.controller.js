@@ -165,7 +165,7 @@ const logoutUser = asyncHandler(async (req, res) => {
     req.user._id,
     {
       $unset: {
-        refreshToken: undefined,
+        refreshToken: 1,
       },
     },
     {
@@ -214,7 +214,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
       secure: true,
     };
 
-    const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
+    const { accessToken, newRefreshToken } = await generateAccessAndRefreshTokens(
       user._id
     );
 
@@ -455,7 +455,9 @@ const getWatchHistory = asyncHandler(async (req, res) => {
     }
   ])
 
-  return res.status(200).json(
+  return res
+  .status(200)
+  .json(
     new ApiResponse(
       200,
       user[0].watchHistory,
